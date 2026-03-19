@@ -71,7 +71,9 @@ class MainWindow(QMainWindow):
         home_layout.addWidget(self.terminal, stretch=1)
 
         # Redirecionar stdout para o terminal embutido
-        sys.stdout = OutputRedirect(self.terminal)
+        self.original_stdout = sys.stdout
+        self.stdout_redirect = OutputRedirect(self.terminal)
+        sys.stdout = self.stdout_redirect
 
         # Criar o botão na parte inferior centralizada
         self.button = QPushButton("Run Voice Recognition", self)
@@ -104,7 +106,7 @@ class MainWindow(QMainWindow):
 
     def run_recognition_thread(self):
         # Iniciar o reconhecimento de voz em uma nova thread para não bloquear a GUI
-        threading.Thread(target=self.run_recognition).start()
+        threading.Thread(target=self.run_recognition, daemon=True).start()
 
     def run_recognition(self):
         # Executa o reconhecimento de voz e processa o resultado
@@ -120,6 +122,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self.audio_processor.stop_stream()
+        sys.stdout = self.original_stdout
         event.accept()
 
 if __name__ == "__main__":

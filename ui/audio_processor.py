@@ -2,6 +2,7 @@ import numpy as np
 import pyaudio
 from scipy import signal as sig
 
+
 class AudioProcessor:
     def __init__(self, canvas):
         self.canvas = canvas
@@ -38,12 +39,17 @@ class AudioProcessor:
         return freqDivs
 
     def get_input_channel(self):
-        deviceInfo = self.p.get_host_api_info_by_index(0)
-        numDevices = deviceInfo.get('deviceCount')
-        for i in range(0, numDevices):
-            if 'Stereo Mix' in self.p.get_device_info_by_host_api_device_index(0, i).get('name'):
-                return i
-        return 0
+        try:
+            default_device = self.p.get_default_input_device_info()
+            return int(default_device.get("index"))
+        except Exception:
+            device_info = self.p.get_host_api_info_by_index(0)
+            num_devices = device_info.get("deviceCount", 0)
+            for i in range(num_devices):
+                details = self.p.get_device_info_by_host_api_device_index(0, i)
+                if int(details.get("maxInputChannels", 0)) > 0:
+                    return i
+            return None
 
     def start_stream(self):
         try:
@@ -54,23 +60,23 @@ class AudioProcessor:
                                       frames_per_buffer=self.chunk,
                                       stream_callback=self.callback)
         except Exception as e:
-            print('Error - Enable Stereo Mix', e)
-            quit()
+            print(f"Audio visualization disabled: {e}")
+            return
 
         # Inicia a animação
         from matplotlib.animation import FuncAnimation
-        self.animation = FuncAnimation(self.canvas.figure, self.update, interval=15)
+        self.animation = FuncAnimation(self.canvas.figure, self.update, interval=15, cache_frame_data=False)
 
     def callback(self, in_data, frame_count, time_info, status):
         audio = np.frombuffer(in_data, dtype=np.int16)
-        self.freq, self.PSD = sig.periodogram(audio, self.sampleRate, nfft=self.sampleRate / 10)
+        self.freq, self.PSD = sig.periodogram(audio, self.sampleRate, nfft=int(self.sampleRate / 10))
         return in_data, pyaudio.paContinue
 
     def stop_stream(self):
         if self.stream is not None:
             self.stream.stop_stream()
             self.stream.close()
-            self.p.terminate()
+        self.p.terminate()
 
     def update(self, frame):
         if not self.PSD.any():
