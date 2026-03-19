@@ -10,7 +10,7 @@ def get_list_of_emails() -> list:
 def send_email(to: str, subject: str, email_body: str) -> str:
 
     message = email.message.Message()
-    password = "yjensohwfhqqnfma"
+    password = ""
     s = smtplib.SMTP('smtp.gmail.com: 587')
 
     message['Subject'] = subject
