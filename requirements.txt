@@ -2,3 +2,15 @@ crewai==0.22.5
 exa_py==1.0.9
 langchain==0.1.13
 python-dotenv==1.0.0
+PyQt5
+matplotlib
+numpy
+scipy
+PyAudio
+SpeechRecognition
+elevenlabs
+spotipy
+coinmarketcapapi
+llama-index-core
+llama-index-llms-groq
+llama-index-llms-ollama
