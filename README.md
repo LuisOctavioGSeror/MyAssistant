@@ -1,42 +1,42 @@
 # MyAssistant
 
-Assistente de voz com interface grafica (PyQt5) que:
+Voice assistant with a desktop UI (PyQt5) that:
 
-- reconhece fala pelo microfone;
-- envia o texto para um agente LLM (LlamaIndex + Groq/Ollama);
-- executa ferramentas como texto-para-fala, notas, e-mail, Spotify, data/hora e cotacoes de cripto.
+- captures speech from the microphone;
+- sends text to an LLM agent (LlamaIndex + Groq/Ollama);
+- runs tools such as text-to-speech, notes, email, Spotify, date/time, and crypto quotes.
 
-## Principais recursos
+## Features
 
-- UI desktop com botao para iniciar reconhecimento de voz;
-- visualizador de audio em tempo real;
-- agente com ferramentas para automacao de tarefas;
-- suporte a variaveis de ambiente via `.env`.
+- Desktop UI with a button to start voice recognition;
+- real-time audio visualizer;
+- agent with tools for lightweight automation;
+- environment variables via `.env` and an in-app **Configurations** tab.
 
-## Estrutura resumida
+## Project layout
 
-- `main/`: inicializacao da aplicacao e config;
-- `ui/`: janela principal e componentes visuais;
-- `recognition_of_speech/`: reconhecimento de fala;
-- `agents/`: agentes LLM e ferramentas;
-- `features/`: integracoes e funcoes de negocio;
-- `speak/`: conversao de texto para audio.
+- `main/`: app entry point and config;
+- `ui/`: main window and visual components;
+- `recognition_of_speech/`: speech recognition;
+- `agents/`: LLM agents and tools;
+- `features/`: integrations and feature logic;
+- `speak/`: text-to-speech.
 
-## Requisitos
+## Requirements
 
-- Python 3.10+ (recomendado 3.11)
+- Python 3.10+ (3.11 recommended)
 - `pip`
-- acesso a internet para servicos externos (Groq, ElevenLabs, Spotify, CoinMarketCap)
+- Internet access for external services (Groq, ElevenLabs, Spotify, CoinMarketCap)
 
-## Variaveis de ambiente
+## Environment variables
 
-1. Copie o arquivo de exemplo:
+1. Copy the example file:
 
 ```bash
 cp .env.example .env
 ```
 
-2. Preencha no `.env`:
+2. Fill in `.env`:
 
 ```env
 ELEVENLABS_API_KEY=
@@ -46,43 +46,43 @@ SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
 ```
 
-## Dados locais esperados
+## Local data
 
-O projeto usa a pasta `data/notes/`.
+The project expects a `data/notes/` folder.
 
-- Exemplo de lista de e-mails: `data/notes/e-mails.example.txt`
-- Crie o arquivo real:
+- Example email list: `data/notes/e-mails.example.txt`
+- Create the real file:
 
 ```bash
 cp data/notes/e-mails.example.txt data/notes/e-mails.txt
 ```
 
-## Como rodar localmente
+## Run locally
 
-### Ubuntu / Zorin / distros Debian-based
+### Ubuntu / Zorin / Debian-based distros
 
-1. Instale dependencias de sistema:
+1. Install system packages:
 
 ```bash
 sudo apt update
 sudo apt install -y python3-venv python3-dev portaudio19-dev
 ```
 
-2. Crie e ative ambiente virtual:
+2. Create and activate a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-3. Instale dependencias Python:
+3. Install Python dependencies:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-4. Execute:
+4. Run:
 
 ```bash
 python -m main.app
@@ -90,77 +90,112 @@ python -m main.app
 
 ### Windows (PowerShell)
 
-1. Crie ambiente virtual:
+1. Create a virtual environment:
 
 ```powershell
 py -m venv .venv
 ```
 
-2. Ative:
+2. Activate it:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-3. Instale dependencias:
+3. Install dependencies:
 
 ```powershell
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-4. Execute:
+4. Run:
 
 ```powershell
 python -m main.app
 ```
 
-> Se houver erro ao instalar `PyAudio`, instale o Build Tools do Visual Studio C++ e tente novamente.
+> If `PyAudio` fails to install, install **Visual Studio Build Tools** (C++ workload) and try again.
 
 ### macOS
 
-1. Instale Python 3 (se necessario) e PortAudio:
+1. Install Python 3 and PortAudio if needed:
 
 ```bash
 brew install python portaudio
 ```
 
-2. Crie e ative ambiente virtual:
+2. Create and activate a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-3. Instale dependencias:
+3. Install dependencies:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-4. Execute:
+4. Run:
 
 ```bash
 python -m main.app
 ```
 
-## Troubleshooting rapido
+## Troubleshooting
 
-- **Microfone nao reconhece voz**
-  - Verifique permissao do microfone no SO.
-  - No Linux, ajuste o indice do microfone em `recognition_of_speech/recognizer.py` (atualmente `sr.Microphone(1)`).
+- **Microphone / no speech detected**
+  - Check OS microphone permission and default input device.
+  - On Linux, use system settings or `pavucontrol` to pick the correct input.
 
-- **Erro com PyAudio**
-  - Linux: confirme `portaudio19-dev` instalado.
-  - macOS: confirme `portaudio` via Homebrew.
-  - Windows: pode exigir Visual C++ Build Tools.
+- **PyAudio issues**
+  - Linux: ensure `portaudio19-dev` is installed.
+  - macOS: ensure `portaudio` is installed (Homebrew).
+  - Windows: may require Visual C++ Build Tools.
 
-- **Falha em servicos externos**
-  - Confirme chaves do `.env`.
-  - Teste conexao com internet.
+- **External API failures**
+  - Verify keys in `.env` or save them in **Configurations**.
+  - Check network connectivity.
 
-## Observacoes
+## MVP checklist (keep it small)
 
-- Este projeto esta em fase inicial/prototipo.
-- Nao suba seu `.env` para o repositorio.
+- [ ] `.env` with at least `GROQ_API_KEY` (and any other keys you actually use).
+- [ ] `data/notes/e-mails.txt` if you test email-related features.
+- [ ] Smoke test: open app → voice button → one agent command.
+- [ ] Tell users: keys belong in `.env`; never commit `.env` to git.
+- [ ] Optional: disable or skip heavy tools you won’t demo (smaller/fewer failure modes).
+
+## Windows executable (PyInstaller)
+
+Build **on a Windows machine** (same Python version you use to develop).
+
+1. Create a venv and install deps (see [Windows (PowerShell)](#windows-powershell)).
+2. Install PyInstaller: `pip install pyinstaller`
+3. From the **repo root**, run:
+
+```bat
+scripts\build_windows.bat
+```
+
+Output: `dist\MyAssistant\MyAssistant.exe`
+
+**Distribute the entire `dist\MyAssistant\` folder** (not only the `.exe`). Place next to `MyAssistant.exe`:
+
+- Your `.env` (or configure keys in the app once on that PC).
+- `data\notes\` if you use notes or the email list file.
+
+**Debug build** (show console errors): edit `scripts\build_windows.bat` and replace `--windowed` with `--console`.
+
+**Notes**
+
+- The first build might need extra `--hidden-import=...` if PyInstaller misses a lazy-imported module (the error usually names it).
+- Antivirus may briefly flag a new `.exe` (false positive); code signing is a later step.
+- The bundle can be **large** (ML + UI). `--onedir` is the default and is usually more reliable than `--onefile` for Qt.
+
+## Notes
+
+- This project is an early prototype.
+- Do **not** commit your `.env` file to the repository.

@@ -11,13 +11,13 @@ class GoogleSpeechRecognizer(VoiceRecognizerInterface):
         try:
             with sr.Microphone(device_index=device_index) as microphone:
                 recognizer.adjust_for_ambient_noise(microphone, duration=0.4)
-                print("Fale agora")
+                print("Speak now")
                 audio = recognizer.listen(microphone, timeout=10, phrase_time_limit=18)
                 text = recognizer.recognize_google(audio, language=language)
                 return text
         except sr.WaitTimeoutError as exc:
-            raise RuntimeError("Nenhuma fala detectada no tempo limite.") from exc
+            raise RuntimeError("No speech detected within the time limit.") from exc
         except sr.UnknownValueError as exc:
-            raise RuntimeError("Nao consegui entender o que foi dito.") from exc
+            raise RuntimeError("Could not understand the speech.") from exc
         except sr.RequestError as exc:
-            raise RuntimeError(f"Falha no servico de reconhecimento: {exc}") from exc
+            raise RuntimeError(f"Speech recognition service error: {exc}") from exc

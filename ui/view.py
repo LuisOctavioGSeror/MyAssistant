@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QVBoxLayout, 
 from ui.assistant_service import AssistantService
 from ui.audio_processor import AudioProcessor
 from ui.components import AssistantTab
+from ui.configurations_tab import ConfigurationsTab
 from ui.output_redirect import OutputRedirect
 from ui.styles import TAB_STYLE
 
@@ -29,7 +30,7 @@ class MainWindow(QMainWindow):
 
         self.assistant_tab = AssistantTab(self)
         self.tabs.addTab(self.assistant_tab, "Assistant")
-        self.tabs.addTab(QWidget(), "Configurations")
+        self.tabs.addTab(ConfigurationsTab(self), "Configurations")
 
         self.original_stdout = sys.stdout
         self.stdout_redirect = OutputRedirect(self.assistant_tab.terminal)
