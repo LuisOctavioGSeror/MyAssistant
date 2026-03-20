@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+        self.setWindowTitle("MyAssistant")
         self.assistant_service = AssistantService()
         self._recognition_running = False
         self.recognition_finished.connect(self._on_recognition_finished)
