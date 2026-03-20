@@ -1,6 +1,9 @@
 import sys
 import threading
 import traceback
+
+import localization
+from main import config as app_config
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
@@ -29,8 +32,9 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.tabs)
 
         self.assistant_tab = AssistantTab(self)
-        self.tabs.addTab(self.assistant_tab, "Assistant")
-        self.tabs.addTab(ConfigurationsTab(self), "Configurations")
+        self.config_tab = ConfigurationsTab(self)
+        self.tabs.addTab(self.assistant_tab, localization.tr("tab_assistant"))
+        self.tabs.addTab(self.config_tab, localization.tr("tab_configurations"))
 
         self.original_stdout = sys.stdout
         self.stdout_redirect = OutputRedirect(self.assistant_tab.terminal)
@@ -41,22 +45,29 @@ class MainWindow(QMainWindow):
         self.audio_processor = AudioProcessor(self.assistant_tab.canvas)
         self.audio_processor.start_stream()
 
+    def refresh_language_ui(self):
+        localization.set_language(app_config.app_language)
+        self.tabs.setTabText(0, localization.tr("tab_assistant"))
+        self.tabs.setTabText(1, localization.tr("tab_configurations"))
+        self.assistant_tab.apply_translations()
+        self.config_tab.apply_translations()
+
     def run_recognition_thread(self):
         if self._recognition_running:
-            print("Voice recognition is already running.")
+            print(localization.tr("voice_already_running"))
             return
         self._recognition_running = True
         self.assistant_tab.run_button.setEnabled(False)
-        print("Starting voice recognition...")
+        print(localization.tr("starting_voice_recognition"))
         threading.Thread(target=self.run_recognition, daemon=True).start()
 
     def run_recognition(self):
         try:
             recognized_text, result = self.assistant_service.run_voice_command()
-            print(f"Recognized text: {recognized_text}")
-            print(f"Agent's response: {result}")
+            print(f"{localization.tr('recognized_text')}: {recognized_text}")
+            print(f"{localization.tr('agent_response')}: {result}")
         except Exception as e:
-            print(f"An error occurred: {type(e).__name__}: {e}")
+            print(f"{localization.tr('error_occurred')}: {type(e).__name__}: {e}")
             print(traceback.format_exc(limit=3))
         finally:
             self._recognition_running = False

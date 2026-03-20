@@ -2,6 +2,8 @@ import numpy as np
 import pyaudio
 from scipy import signal as sig
 
+import localization
+
 
 class AudioProcessor:
     def __init__(self, canvas):
@@ -60,7 +62,7 @@ class AudioProcessor:
                                       frames_per_buffer=self.chunk,
                                       stream_callback=self.callback)
         except Exception as e:
-            print(f"Audio visualization disabled: {e}")
+            print(f"{localization.tr('audio_viz_disabled')}: {e}")
             return
 
         # Inicia a animação

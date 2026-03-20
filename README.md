@@ -11,7 +11,7 @@ Voice assistant with a desktop UI (PyQt5) that:
 - Desktop UI with a button to start voice recognition;
 - real-time audio visualizer;
 - agent with tools for lightweight automation;
-- environment variables via `.env` and an in-app **Configurations** tab.
+- environment variables via `.env` and an in-app **Configurations** tab (API keys + language).
 
 ## Project layout
 
@@ -39,12 +39,15 @@ cp .env.example .env
 2. Fill in `.env`:
 
 ```env
+APP_LANGUAGE=en_US
 ELEVENLABS_API_KEY=
 GROQ_API_KEY=
 COINMARKETCAP_API=
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
 ```
+
+`APP_LANGUAGE` controls the UI, embedded terminal messages, and Google speech language: `pt_BR`, `en_US`, `de_DE`, or `es_ES`. You can also change it under **Configurations** in the app.
 
 ## Local data
 
